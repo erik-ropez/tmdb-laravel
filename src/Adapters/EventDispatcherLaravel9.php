@@ -8,7 +8,6 @@ namespace Tmdb\Laravel\Adapters;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyDispatcher;
 use Illuminate\Contracts\Events\Dispatcher as LaravelDispatcher;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This adapter provides a Laravel integration for applications
@@ -16,7 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
  * It passes any request on to a Symfony Dispatcher and only
  * uses the Laravel Dispatcher only when dispatching events
  */
-class EventDispatcherLaravel5 extends EventDispatcherAdapter
+class EventDispatcherLaravel9 extends EventDispatcherAdapter
 {
     /**
      * Forward all methods to the Laravel Events Dispatcher
@@ -29,25 +28,25 @@ class EventDispatcherLaravel5 extends EventDispatcherAdapter
         $this->symfonyDispatcher = $symfonyDispatcher;
     }
 
-    public function getListeners($eventName = null)
+    public function getListeners(?string $eventName = null): array
     {
         return $this->symfonyDispatcher->getListeners($eventName);
     }
 
-    public function getListenerPriority($eventName, $listener)
+    public function getListenerPriority(string $eventName, callable $listener): ?int
     {
         return $this->symfonyDispatcher->getListenerPriority($eventName, $listener);
     }
 
-    public function hasListeners($eventName = null)
+    public function hasListeners(?string $eventName = null): bool
     {
         return ($this->symfonyDispatcher->hasListeners($eventName) ||
             $this->laravelDispatcher->hasListeners($eventName));
     }
 
-    public function dispatch($eventName, Event $event = null)
+    public function dispatch(object $event, ?string $eventName = null): object
     {
         $this->laravelDispatcher->dispatch($eventName, $event);
-        return $this->symfonyDispatcher->dispatch($eventName, $event);
+        return $this->symfonyDispatcher->dispatch($event, $eventName);
     }
 }

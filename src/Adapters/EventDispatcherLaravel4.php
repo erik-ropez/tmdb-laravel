@@ -8,6 +8,7 @@ namespace Tmdb\Laravel\Adapters;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface as SymfonyDispatcher;
 use Illuminate\Events\Dispatcher as LaravelDispatcher;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * This adapter provides a Laravel integration for applications
@@ -26,5 +27,27 @@ class EventDispatcherLaravel4 extends EventDispatcherAdapter
     {
         $this->laravelDispatcher = $laravelDispatcher;
         $this->symfonyDispatcher = $symfonyDispatcher;
+    }
+
+    public function getListeners($eventName = null)
+    {
+        return $this->symfonyDispatcher->getListeners($eventName);
+    }
+
+    public function getListenerPriority($eventName, $listener)
+    {
+        return $this->symfonyDispatcher->getListenerPriority($eventName, $listener);
+    }
+
+    public function hasListeners($eventName = null)
+    {
+        return ($this->symfonyDispatcher->hasListeners($eventName) ||
+            $this->laravelDispatcher->hasListeners($eventName));
+    }
+
+    public function dispatch($eventName, Event $event = null)
+    {
+        $this->laravelDispatcher->dispatch($eventName, $event);
+        return $this->symfonyDispatcher->dispatch($eventName, $event);
     }
 }
