@@ -19,13 +19,6 @@
         "evinkuraga/tmdb-api": "dev-master",
         "symfony/event-dispatcher": ""
     },
-    "repositories": {
-        "evinkuraga/tmdb-api": {
-          "type": "vcs",
-          "url": "https://github.com/erik-ropez/tmdb-api.git",
-          "no-api": true
-        }
-    },
     "require-dev": {
         "phpunit/phpunit": "~4.5",
         "symfony/event-dispatcher": "~2.8||~3.0",
